@@ -15,10 +15,11 @@
 
 x-shared_environment: &shared_environment
   LOG_LEVEL: ${LOG_LEVEL:-debug}
+  GITHUB_API_TOKEN: ${GITHUB_API_TOKEN}
   
 services:
   app:
-    image: needle-tail:latest
+    image: swift-package-registry-service:latest
     build:
       context: .
     environment:

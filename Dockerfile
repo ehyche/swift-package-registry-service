@@ -30,11 +30,20 @@ RUN swift build -c release \
         --static-swift-stdlib \
         -Xlinker -ljemalloc
 
+# Execute tests
+RUN swift test
+
+# Run database migration
+RUN echo "y" | swift run App migrate
+
 # Switch to the staging area
 WORKDIR /staging
 
 # Copy main executable to staging area
 RUN cp "$(swift build --package-path /build -c release --show-bin-path)/App" ./
+
+# Copy .sprsCache to staging area
+RUN cp -r /build/.sprsCache ./
 
 # Copy static swift backtracer binary to staging area
 RUN cp "/usr/libexec/swift/linux/swift-backtrace-static" ./
@@ -61,7 +70,7 @@ RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
       ca-certificates \
       tzdata \
 # If your app or its dependencies import FoundationNetworking, also install `libcurl4`.
-      # libcurl4 \
+      libcurl4 \
 # If your app or its dependencies import FoundationXML, also install `libxml2`.
       # libxml2 \
     && rm -r /var/lib/apt/lists/*
