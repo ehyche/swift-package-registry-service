@@ -1,7 +1,7 @@
 @testable import AsyncHTTPClient
 import ChecksumClient
 @testable import ChecksumClientImpl
-import CryptoKit
+import Crypto
 import Foundation
 import HTTPStreamClient
 import NIOCore
@@ -14,7 +14,7 @@ struct ChecksumClientImplTests {
         let url = try #require(Bundle.module.url(forResource: "swift-overture-0.5.0", withExtension: "zip"))
         let contents = try Data(contentsOf: url)
 
-        var hashFunction = ChecksumClientImpl.CryptoKitSHA256()
+        var hashFunction = Crypto.SHA256()
 
         // Break up into 1k chunks
         let chunkSize = 1024
@@ -22,11 +22,11 @@ struct ChecksumClientImplTests {
         var upperBound = 0
         while lowerBound < contents.count {
             upperBound = min(lowerBound + chunkSize, contents.count)
-            hashFunction.hash(Array(contents[lowerBound..<upperBound]))
+            hashFunction.update(data: Array(contents[lowerBound..<upperBound]))
             lowerBound = upperBound
         }
         let hash = hashFunction.finalize()
-        let hex = hash.hexadecimalRepresentation
+        let hex = hash.hex
 
         #expect(hex == "06bc2e1e4f22b40bc2c4c045d7559bcceb94e684cd32ebb295eee615890d724e")
     }
@@ -43,8 +43,7 @@ struct ChecksumClientImplTests {
         )
         let checkSumClient = ChecksumClient.live(
             httpStreamClient: .test(response: httpClientResponse),
-            fileClient: .mock,
-            getHashAlgorithm: { ChecksumClientImpl.CryptoKitSHA256() }
+            fileClient: .mock
         )
         let checksum = try await checkSumClient.computeChecksum(.mock)
         #expect(checksum.checksum == "06bc2e1e4f22b40bc2c4c045d7559bcceb94e684cd32ebb295eee615890d724e")
@@ -63,8 +62,7 @@ struct ChecksumClientImplTests {
         )
         let checkSumClient = ChecksumClient.live(
             httpStreamClient: .test(response: httpClientResponse),
-            fileClient: .mock,
-            getHashAlgorithm: { ChecksumClientImpl.CryptoKitSHA256() }
+            fileClient: .mock
         )
         let checksum = try await checkSumClient.computeChecksum(.mock)
         #expect(checksum.checksum == "06bc2e1e4f22b40bc2c4c045d7559bcceb94e684cd32ebb295eee615890d724e")

@@ -1,5 +1,6 @@
 import AsyncHTTPClient
 import ChecksumClient
+import Crypto
 import FileClient
 import Foundation
 import HTTPStreamClient
@@ -11,8 +12,7 @@ extension ChecksumClient {
 
     public static func live(
         httpStreamClient: HTTPStreamClient,
-        fileClient: FileClient,
-        getHashAlgorithm: @escaping @Sendable () -> HashAlgorithm = { SHA256() }
+        fileClient: FileClient
     ) -> Self {
         Self(
             computeChecksum: { input in
@@ -41,17 +41,17 @@ extension ChecksumClient {
                     }
 
                     var receivedBytes = 0
-                    var hashAlgorithm = getHashAlgorithm()
+                    var hashAlgorithm = Crypto.SHA256()
                     for try await buffer in response.body {
                         // Update the receivedBytes count
                         receivedBytes += buffer.readableBytes
                         // Update the hash
-                        hashAlgorithm.hash(Array<UInt8>(buffer: buffer))
+                        hashAlgorithm.update(data: Array<UInt8>(buffer: buffer))
                     }
                     logger.debug("Received total of \(receivedBytes) bytes")
                     let hashBytes = hashAlgorithm.finalize()
 
-                    return .ok(.init(checksum: hashBytes.hexadecimalRepresentation))
+                    return .ok(.init(checksum: hashBytes.hex))
                 } catch {
                     logger.error("Download error: \(error)")
                     throw error
@@ -61,10 +61,10 @@ extension ChecksumClient {
                 // Hash the whole file in one go.
                 // TODO: improve performance by hashing chunk-by-chunk
                 let fileBytes = try await fileClient.readFile(path: path)
-                var hashAlgorithm = getHashAlgorithm()
-                hashAlgorithm.hash(Array<UInt8>(buffer: fileBytes))
+                var hashAlgorithm = Crypto.SHA256()
+                hashAlgorithm.update(data: Array<UInt8>(buffer: fileBytes))
                 let hashBytes = hashAlgorithm.finalize()
-                return hashBytes.hexadecimalRepresentation
+                return hashBytes.hex
             }
         )
     }
