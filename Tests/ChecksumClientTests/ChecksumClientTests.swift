@@ -1,7 +1,6 @@
 import APIUtilities
 @testable import AsyncHTTPClient
 @testable import ChecksumClient
-import CryptoKit
 import Foundation
 import HTTPStreamClient
 import NIOCore
@@ -10,11 +9,11 @@ import Testing
 
 struct ChecksumClientTests {
 
-    @Test func cryptoKitSHA256() throws {
+    @Test func sha256() throws {
         let url = try #require(Bundle.module.url(forResource: "swift-overture-0.5.0", withExtension: "zip"))
         let contents = try Data(contentsOf: url)
 
-        var hashFunction = CryptoKitSHA256()
+        var hashFunction = SHA256()
 
         // Break up into 1k chunks
         let chunkSize = 1024
@@ -26,7 +25,7 @@ struct ChecksumClientTests {
             lowerBound = upperBound
         }
         let hash = hashFunction.finalize()
-        let hex = hash.hexadecimalRepresentation
+        let hex = hash.hex
 
         #expect(hex == "06bc2e1e4f22b40bc2c4c045d7559bcceb94e684cd32ebb295eee615890d724e")
     }

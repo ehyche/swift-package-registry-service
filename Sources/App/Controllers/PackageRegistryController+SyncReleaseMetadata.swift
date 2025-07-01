@@ -88,7 +88,7 @@ extension PackageRegistryController {
             }
             hashAlgorithm.hash(fileChunkBytes)
         }
-        let checksum = hashAlgorithm.finalize().hexadecimalRepresentation
+        let checksum = hashAlgorithm.finalize().hex
         req.logger.debug("Computed checksum of \"\(cachedSourceArchivePath)\" as \(checksum)")
 
         // Construct the PackageReleaseMetadata

@@ -23,7 +23,8 @@ public func configure(
 ) async throws {
     // Clear all default middleware (then, add back route logging)
     app.middleware = .init()
-    app.middleware.use(CustomRouteLoggingMiddleware(logLevel: .info))
+    let logLevel = Logger.Level(rawValue: Environment.get("LOG_LEVEL") ?? "info")
+    app.middleware.use(CustomRouteLoggingMiddleware(logLevel: logLevel ?? .info))
     // Add custom error handling middleware first.
     app.middleware.use(ProblemDetailsErrorMiddleware.default(environment: environment))
 

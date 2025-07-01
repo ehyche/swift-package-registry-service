@@ -14,11 +14,13 @@
 #
 
 x-shared_environment: &shared_environment
+  # Valid LOG_LEVEL values are "trace", "debug", "info", "notice", "warning", "error", or "critical"
   LOG_LEVEL: ${LOG_LEVEL:-debug}
+  GITHUB_API_TOKEN: ${GITHUB_API_TOKEN}
   
 services:
   app:
-    image: needle-tail:latest
+    image: swift-package-registry-service:latest
     build:
       context: .
     environment:

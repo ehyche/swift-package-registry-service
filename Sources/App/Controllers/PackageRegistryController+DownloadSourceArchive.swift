@@ -2,7 +2,7 @@ import APIUtilities
 import AsyncHTTPClient
 import GithubAPIClient
 import HTTPStreamClient
-import System
+import SystemPackage
 import Vapor
 
 extension PackageRegistryController {

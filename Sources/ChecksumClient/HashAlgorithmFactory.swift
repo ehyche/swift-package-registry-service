@@ -1,15 +1,7 @@
 enum HashAlgorithmFactory {
 
     public static func live() -> HashAlgorithm {
-        #if canImport(CryptoKit)
-        if #available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *) {
-            return CryptoKitSHA256()
-        } else {
-            return InternalSHA256()
-        }
-        #else
-        return InternalSHA256()
-        #endif
+        return SHA256()
     }
 
     public static func test(result: [UInt8]) -> HashAlgorithm {

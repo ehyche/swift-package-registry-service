@@ -21,7 +21,7 @@ extension GithubAPIClient {
             ),
             ClientLoggingMiddleware(bodyLoggingPolicy: .never),
         ]
-        if let githubAPIToken {
+        if let githubAPIToken, !githubAPIToken.isEmpty {
             middlewares.insert(ClientAuthMiddleware(bearerToken: githubAPIToken), at: 0)
         }
 
