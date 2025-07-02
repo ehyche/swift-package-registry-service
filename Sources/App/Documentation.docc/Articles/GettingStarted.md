@@ -31,10 +31,12 @@ You should see something like:
 ```
 $ swift run App migrate
 ...
-Build of product 'App' complete! (92.19s)
+Build of product 'App' complete! (85.77s)
 Migrate Command: Prepare
 The following migration(s) will be prepared:
 + App.CreateRepositories on <default>
++ App.CreateManifests on <default>
++ App.CreatePackageReleases on <default>
 Would you like to continue?
 y/n> 
 ```
@@ -42,9 +44,13 @@ y/n>
 Type 'y' and then hit Return. Then you should see:
 
 ```
-y/n> y 
+y/n> y
 [ INFO ] [Migrator] Starting prepare [database-id: sqlite, migration: App.CreateRepositories]
 [ INFO ] [Migrator] Finished prepare [database-id: sqlite, migration: App.CreateRepositories]
+[ INFO ] [Migrator] Starting prepare [database-id: sqlite, migration: App.CreateManifests]
+[ INFO ] [Migrator] Finished prepare [database-id: sqlite, migration: App.CreateManifests]
+[ INFO ] [Migrator] Starting prepare [database-id: sqlite, migration: App.CreatePackageReleases]
+[ INFO ] [Migrator] Finished prepare [database-id: sqlite, migration: App.CreatePackageReleases]
 Migration successful
 ```
 
@@ -52,8 +58,10 @@ Now you should see a directory created called `.sprsCache` and a `db.sqlite` fil
 
 ```
 $ ls -l .sprsCache
-total 48
--rw-r--r--  1 <your-username>  staff  24576 Mar 24 14:27 db.sqlite
+total 88
+-rw-r--r--  1 ehyche  staff  45056 Jul  1 16:48 db.sqlite
+drwxr-xr-x  2 ehyche  staff     64 Jul  1 16:47 manifests
+drwxr-xr-x  2 ehyche  staff     64 Jul  1 16:47 sourceArchives
 ```
 
 ## Running the service from the command line
@@ -72,112 +80,186 @@ Build of product 'App' complete! (25.07s)
 ## Testing the service using curl
 
 Before you point Swift Package Manager at this service, you might want to do some simple curl's to see it run.
-All of the examples below use [this repository](https://github.com/pointfreeco/swift-overture) as an example.
+All of the examples below use [this repository](https://github.com/pointfreeco/swift-clocks) as an example.
 
-The sections below give examples of each of the 5 endpoints of the service.
+The sections below give examples of each of the 5 endpoints of the service. To make it easier, there are scripts
+in the `<repo-root>/scripts` directory which take care of all of the `curl` arguments. So all of the examples
+below assume you are in the `<repo-root>` directory.
 
-### List Package Releases using curl
+### List Package Releases
 
 ```
-$ curl --no-progress-meter -H "Accept: application/vnd.swift.registry.v1+json" http://127.0.0.1:8080/pointfreeco/swift-overture
+$ ./scripts/pr-list-package-releases.sh pointfreeco swift-clocks
 {
   "releases" : {
     "0.1.0" : {
-      "url" : "http://127.0.0.1:8080/pointfreeco/swift-overture/0.1.0"
+      "url" : "http://127.0.0.1:8080/pointfreeco/swift-clocks/0.1.0"
     },
-    "0.2.0" : {
-      "url" : "http://127.0.0.1:8080/pointfreeco/swift-overture/0.2.0"
+    "0.1.1" : {
+      "url" : "http://127.0.0.1:8080/pointfreeco/swift-clocks/0.1.1"
     },
-    "0.3.0" : {
-      "url" : "http://127.0.0.1:8080/pointfreeco/swift-overture/0.3.0"
+    ...,
+    "1.0.5" : {
+      "url" : "http://127.0.0.1:8080/pointfreeco/swift-clocks/1.0.5"
     },
-    "0.3.1" : {
-      "url" : "http://127.0.0.1:8080/pointfreeco/swift-overture/0.3.1"
-    },
-    "0.4.0" : {
-      "url" : "http://127.0.0.1:8080/pointfreeco/swift-overture/0.4.0"
-    },
-    "0.5.0" : {
-      "url" : "http://127.0.0.1:8080/pointfreeco/swift-overture/0.5.0"
+    "1.0.6" : {
+      "url" : "http://127.0.0.1:8080/pointfreeco/swift-clocks/1.0.6"
     }
   }
 }
 ```
 
-### Fetch release metadata using curl
+### Fetch release metadata
 
 ```
-$ curl --no-progress-meter -H "Accept: application/vnd.swift.registry.v1+json" http://127.0.0.1:8080/pointfreeco/swift-overture/0.5.0
+$ ./scripts/pr-fetch-release-metadata.sh pointfreeco swift-clocks 1.0.6
 {
-  "id" : "pointfreeco.swift-overture",
+  "id" : "pointfreeco.swift-clocks",
   "metadata" : {
     "repositoryURLs" : [
-      "https://github.com/pointfreeco/swift-overture",
-      "https://github.com/pointfreeco/swift-overture.git",
-      "git@github.com:pointfreeco/swift-overture.git"
+      "https://github.com/pointfreeco/swift-clocks",
+      "https://github.com/pointfreeco/swift-clocks.git",
+      "git@github.com:pointfreeco/swift-clocks.git"
     ]
   },
-  "publishedAt" : "2019-03-26T18:04:46Z",
+  "publishedAt" : "2024-12-27T01:09:43Z",
   "resources" : [
     {
-      "checksum" : "13aedbe3a79154ef848290444ac754c5cf9fee9283f46a3a43645004a912063f",
+      "checksum" : "a7bfe45da7bdb8afd5ea2b952a3598ddb66f8874cf026b6dc6f0b15164036658",
       "name" : "source-archive",
       "type" : "application/zip"
     }
   ],
-  "version" : "0.5.0"
+  "version" : "1.0.6"
 }
 ```
 
-### Fetch manifest using curl
+### Fetch manifest
+
+#### Fetching unversioned `Package.swift`
 
 ```
-$ curl --verbose -H "Accept: application/vnd.swift.registry.v1+swift" http://127.0.0.1:8080/pointfreeco/swift-overture/0.5.0/Package.swift
-// swift-tools-version:5.0
-import Foundation
+$ ./scripts/pr-fetch-manifest.sh pointfreeco swift-clocks 1.0.6
+// swift-tools-version: 5.9
+
 import PackageDescription
 
 let package = Package(
-  name: "Overture",
+  name: "swift-clocks",
+  // NB: While the `Clock` protocol is iOS 16+, etc., the package should support earlier platforms
+  //     so that depending libraries and applications can conditionally use the library via
+  //     availability checks.
+  platforms: [
+    .iOS(.v13),
+    .macOS(.v10_15),
+    .tvOS(.v13),
+    .watchOS(.v6),
+  ],
   products: [
     .library(
-      name: "Overture",
-      targets: ["Overture"]),
+      name: "Clocks",
+      targets: ["Clocks"]
+    )
+  ],
+  dependencies: [
+    .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
+    .package(url: "https://github.com/pointfreeco/swift-concurrency-extras", from: "1.0.0"),
+    .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", from: "1.2.2"),
   ],
   targets: [
     .target(
-      name: "Overture",
-      dependencies: []),
+      name: "Clocks",
+      dependencies: [
+        .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras"),
+        .product(name: "IssueReporting", package: "xctest-dynamic-overlay"),
+      ]
+    ),
     .testTarget(
-      name: "OvertureTests",
-      dependencies: ["Overture"]),
+      name: "ClocksTests",
+      dependencies: [
+        "Clocks"
+      ]
+    ),
   ]
 )
 
-if ProcessInfo.processInfo.environment.keys.contains("PF_DEVELOP") {
-  package.dependencies.append(
-    contentsOf: [
-      .package(url: "https://github.com/yonaskolb/XcodeGen.git", from: "2.3.0"),
-    ]
-  )
+for target in package.targets {
+  target.swiftSettings = target.swiftSettings ?? []
+  target.swiftSettings!.append(contentsOf: [
+    .enableExperimentalFeature("StrictConcurrency")
+  ])
 }
 ```
 
-### Download Source Archive via curl
+#### Fetching Swift 6.0 manifest
 
 ```
-$ curl --no-progress-meter -H "Accept: application/vnd.swift.registry.v1+zip" --output swift-overture-0.5.0.zip http://127.0.0.1:8080/pointfreeco/swift-overture/0.5.0.zip
+$ ./scripts/pr-fetch-manifest.sh pointfreeco swift-clocks 1.0.6 6.0
+// swift-tools-version: 6.0
+
+import PackageDescription
+
+let package = Package(
+  name: "swift-clocks",
+  // NB: While the `Clock` protocol is iOS 16+, etc., the package should support earlier platforms
+  //     so that depending libraries and applications can conditionally use the library via
+  //     availability checks.
+  platforms: [
+    .iOS(.v13),
+    .macOS(.v10_15),
+    .tvOS(.v13),
+    .watchOS(.v6),
+  ],
+  products: [
+    .library(
+      name: "Clocks",
+      targets: ["Clocks"]
+    )
+  ],
+  dependencies: [
+    .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
+    .package(url: "https://github.com/pointfreeco/swift-concurrency-extras", from: "1.0.0"),
+    .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", from: "1.2.2"),
+  ],
+  targets: [
+    .target(
+      name: "Clocks",
+      dependencies: [
+        .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras"),
+        .product(name: "IssueReporting", package: "xctest-dynamic-overlay"),
+      ]
+    ),
+    .testTarget(
+      name: "ClocksTests",
+      dependencies: [
+        "Clocks"
+      ]
+    ),
+  ],
+  swiftLanguageModes: [.v6]
+)
 ```
 
-After running you should see a file called `swift-overture-0.5.0.zip`.
-
-### Lookup Package Identifiers via curl
+### Download Source Archive
 
 ```
-$ curl --no-progress-meter -H "Accept: application/vnd.swift.registry.v1+json" "http://127.0.0.1:8080/identifiers?url=https://github.com/pointfreeco/swift-overture.git"
+$ ./scripts/pr-download-source-archive.sh pointfreeco swift-clocks 1.0.6 swift-clocks-1.0.6.zip
+```
+
+After running you should see a file called `swift-clocks-1.0.6.zip`:
+
+```
+$ ls -l swift-clocks-1.0.6.zip
+-rw-r--r--  1 ehyche  staff  37893 Jul  1 20:30 swift-clocks-1.0.6.zip
+```
+
+### Lookup Package Identifiers
+
+```
+$ ./scripts/pr-lookup-identifiers.sh pointfreeco swift-clocks
 {
   "identifiers" : [
-    "pointfreeco.swift-overture"
+    "pointfreeco.swift-clocks"
   ]
 }
 ```
