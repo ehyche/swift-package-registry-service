@@ -34,6 +34,8 @@ public func configure(
     app.migrations.add(CreateRepositories())
     app.migrations.add(CreateManifests())
     app.migrations.add(CreatePackageReleases())
+    app.migrations.add(CreateRepositoryTags())
+    app.migrations.add(CreateRepositoryVersions())
     if sqliteConfiguration.storage.isMemory {
         try await app.autoMigrate()
     }
