@@ -4,7 +4,6 @@ import Fluent
 import FluentSQLiteDriver
 import GithubAPIClient
 import HTTPStreamClient
-import PersistenceClient
 import Vapor
 
 public func configure(
@@ -14,7 +13,6 @@ public func configure(
     githubAPIClient: GithubAPIClient,
     checksumClient: ChecksumClient,
     httpStreamClient: HTTPStreamClient,
-    persistenceClient: PersistenceClient,
     logger: Logger,
     githubAPIToken: String,
     sqliteConfiguration: SQLiteConfiguration,
@@ -35,7 +33,6 @@ public func configure(
     app.migrations.add(CreateManifests())
     app.migrations.add(CreatePackageReleases())
     app.migrations.add(CreateRepositoryTags())
-    app.migrations.add(CreateRepositoryVersions())
     app.migrations.add(CreateRepositoryTagSync())
     if sqliteConfiguration.storage.isMemory {
         try await app.autoMigrate()
@@ -55,7 +52,6 @@ public func configure(
         githubAPIClient: githubAPIClient,
         checksumClient: checksumClient,
         httpStreamClient: httpStreamClient,
-        persistenceClient: persistenceClient,
         appLogger: logger
     )
 

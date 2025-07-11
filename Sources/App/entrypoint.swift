@@ -39,13 +39,6 @@ enum Entrypoint {
                 githubAPIClient: .live(),
                 checksumClient: .live(),
                 httpStreamClient: httpStreamClient,
-                persistenceClient: .live(
-                    fileClient: fileClient,
-                    httpStreamClient: httpStreamClient,
-                    byteBufferAllocator: app.allocator,
-                    cacheRootDirectory: cacheRootDirectory,
-                    githubAPIToken: githubAPIToken
-                ),
                 logger: app.logger,
                 githubAPIToken: githubAPIToken,
                 sqliteConfiguration: .file(dbPath),

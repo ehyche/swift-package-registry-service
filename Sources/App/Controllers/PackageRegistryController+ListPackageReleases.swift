@@ -1,7 +1,6 @@
 import APIUtilities
 import GithubAPIClient
 import HTTPTypes
-import PersistenceClient
 import Vapor
 
 extension PackageRegistryController {
@@ -17,12 +16,12 @@ extension PackageRegistryController {
 
         // Sync the tags with the Github API and return the cached tags.
         // For this endpoint, we will always sync with the API.
-        let tagFile = try await tagsActor.loadTagFile(owner: owner, repo: repo, forceSync: true, logger: req.logger)
+        let tagInfo = try await tagsActor.loadTagInfo(owner: owner, repo: repo, req: req)
 
-        // The PersistenceClient.TagFile already has a [Version: String] map.
+        // The PackageTagInfo already has a [Version: String] map.
         // So we just need to send the keys to that map. Those are only
         // valid versions of the repository.
-        return .init(versions: tagFile.versionToTagName.keys.sorted(by: >))
+        return .init(versions: tagInfo.versionToTagName.keys.sorted(by: >))
     }
 
     private struct ListPackageReleasesQueryParameters: Content {

@@ -1,7 +1,6 @@
 import APIUtilities
 import GithubAPIClient
 import NIOHTTP1
-import PersistenceClient
 import Vapor
 
 extension PackageRegistryController {

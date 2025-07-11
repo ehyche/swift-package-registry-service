@@ -5,7 +5,6 @@ import Fluent
 import Foundation
 import GithubAPIClient
 import HTTPStreamClient
-import PersistenceClient
 import Vapor
 
 struct PackageRegistryController: RouteCollection {
@@ -18,7 +17,6 @@ struct PackageRegistryController: RouteCollection {
     let githubAPIClient: GithubAPIClient
     let checksumClient: ChecksumClient
     let httpStreamClient: HTTPStreamClient
-    let persistenceClient: PersistenceClient
     let appLogger: Logger
     let getDateNow: GetDateNow
     let tagsActor: TagsActor
@@ -35,7 +33,6 @@ struct PackageRegistryController: RouteCollection {
         githubAPIClient: GithubAPIClient,
         checksumClient: ChecksumClient,
         httpStreamClient: HTTPStreamClient,
-        persistenceClient: PersistenceClient,
         appLogger: Logger,
         getDateNow: @escaping GetDateNow = { Date.now }
     ) {
@@ -46,19 +43,16 @@ struct PackageRegistryController: RouteCollection {
         self.githubAPIClient = githubAPIClient
         self.checksumClient = checksumClient
         self.httpStreamClient = httpStreamClient
-        self.persistenceClient = persistenceClient
         self.appLogger = appLogger
         self.getDateNow = getDateNow
 
-        let tagsActor = TagsActor { owner, repo, forceSync, reqLogger in
+        let tagsActor = TagsActor { owner, repo, req in
             try await Self.syncTags(
                 owner: owner,
                 repo: repo,
-                forceSync: forceSync,
-                persistenceClient: persistenceClient,
                 githubAPIClient: githubAPIClient,
-                logger: reqLogger,
-                now: getDateNow
+                now: getDateNow,
+                req: req
             )
         }
 

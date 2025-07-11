@@ -3,7 +3,6 @@ import Dependencies
 import GithubAPIClient
 import ChecksumClient
 import HTTPStreamClient
-import PersistenceClient
 import Vapor
 import VaporTesting
 
@@ -11,7 +10,6 @@ func testApp(
     githubAPIClient: GithubAPIClient = .mock,
     checksumClient: ChecksumClient = .mock,
     httpStreamClient: HTTPStreamClient = .mock,
-    persistenceClient: PersistenceClient = .test(),
     githubAPIToken: String = "",
     clientSupportsPagination: Bool = false,
     testAction: (Application) async throws -> ()
@@ -25,7 +23,6 @@ func testApp(
             githubAPIClient: githubAPIClient,
             checksumClient: checksumClient,
             httpStreamClient: httpStreamClient,
-            persistenceClient: persistenceClient,
             logger: app.logger,
             githubAPIToken: githubAPIToken,
             sqliteConfiguration: .memory,
