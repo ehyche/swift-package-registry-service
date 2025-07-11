@@ -37,7 +37,6 @@ let package = Package(
                 .target(name: "GithubAPIClientImpl"),
                 .target(name: "APIUtilities"),
                 .target(name: "HTTPStreamClient"),
-                .target(name: "PersistenceClient"),
             ]
         ),
         .target(
@@ -116,31 +115,6 @@ let package = Package(
                 .product(name: "AsyncHTTPClient", package: "async-http-client"),
             ]
         ),
-        .target(
-            name: "PersistenceClient",
-            dependencies: [
-                .product(name: "Dependencies", package: "swift-dependencies"),
-                .product(name: "DependenciesMacros", package: "swift-dependencies"),
-                .product(name: "Overture", package: "swift-overture"),
-                .target(name: "FileClient"),
-                .target(name: "APIUtilities"),
-                .target(name: "HTTPStreamClient"),
-                .product(name: "NIOFoundationCompat", package: "swift-nio"),
-                .product(name: "NIOCore", package: "swift-nio"),
-            ]
-        ),
-        .target(
-            name: "FileClient",
-            dependencies: [
-                .product(name: "Dependencies", package: "swift-dependencies"),
-                .product(name: "DependenciesMacros", package: "swift-dependencies"),
-                .product(name: "Semaphore", package: "Semaphore"),
-                .product(name: "NIOCore", package: "swift-nio"),
-                .product(name: "NIOPosix", package: "swift-nio"),
-                .product(name: "_NIOFileSystem", package: "swift-nio"),
-                .product(name: "Overture", package: "swift-overture"),
-            ]
-        ),
         .testTarget(
             name: "AppTests",
             dependencies: [
@@ -169,11 +143,5 @@ let package = Package(
                 .process("Resources/swift-overture-0.5.0.zip"),
             ]
         ),
-        .testTarget(
-            name: "FileClientTests",
-            dependencies: [
-                .target(name: "FileClient"),
-            ]
-        )
     ]
 )

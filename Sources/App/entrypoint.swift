@@ -1,6 +1,5 @@
 import ChecksumClient
 import Dependencies
-import FileClient
 import GithubAPIClient
 import GithubAPIClientImpl
 import HTTPStreamClient
@@ -17,7 +16,6 @@ enum Entrypoint {
         let app = try await Application.make(env)
 
         let githubAPIToken = Environment.get("GITHUB_API_TOKEN") ?? ""
-        let fileClient: FileClient = .live()
         let httpStreamClient: HTTPStreamClient = .live()
         let cacheRootDirectory = app.directory.workingDirectory.appending(".sprsCache/")
         try await Self.ensureDirectoryExists(cacheRootDirectory)

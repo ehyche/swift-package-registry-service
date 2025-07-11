@@ -16,7 +16,6 @@ Each of the components above are the following:
 * Github OpenAPI Codegen. This can be found in the `GithubOpenAPI` module. It uses the [swift-openapi-generator](https://github.com/apple/swift-openapi-generator)
   Swift Package Manager plugin to generate code from the Github API.
 * HTTP Stream Client. This can be found in the `HTTPStreamClient` module, and is an abstraction of an HTTP client.
-* File Client. This is an abstraction for a file system, and can be found in the `FileClient` module.
 
 For all of our clients, we use the [swift-dependencies](https://github.com/pointfreeco/swift-dependencies) style of clients.
 
