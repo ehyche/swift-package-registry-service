@@ -2,7 +2,6 @@ import ChecksumClient
 import Dependencies
 import GithubAPIClient
 import GithubAPIClientImpl
-import HTTPStreamClient
 import _NIOFileSystem
 import Logging
 import Vapor
@@ -16,7 +15,6 @@ enum Entrypoint {
         let app = try await Application.make(env)
 
         let githubAPIToken = Environment.get("GITHUB_API_TOKEN") ?? ""
-        let httpStreamClient: HTTPStreamClient = .live()
         let cacheRootDirectory = app.directory.workingDirectory.appending(".sprsCache/")
         try await Self.ensureDirectoryExists(cacheRootDirectory)
         let manifestsCacheDirectory = cacheRootDirectory
@@ -36,7 +34,6 @@ enum Entrypoint {
                 cacheRootDirectory: cacheRootDirectory,
                 githubAPIClient: .live(),
                 checksumClient: .live(),
-                httpStreamClient: httpStreamClient,
                 logger: app.logger,
                 githubAPIToken: githubAPIToken,
                 sqliteConfiguration: .file(dbPath),

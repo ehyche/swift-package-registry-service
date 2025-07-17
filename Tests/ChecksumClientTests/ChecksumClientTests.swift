@@ -2,7 +2,6 @@ import APIUtilities
 @testable import AsyncHTTPClient
 @testable import ChecksumClient
 import Foundation
-import HTTPStreamClient
 import NIOCore
 import NIOHTTP1
 import Testing

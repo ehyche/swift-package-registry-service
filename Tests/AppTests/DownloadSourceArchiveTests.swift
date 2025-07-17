@@ -2,7 +2,6 @@
 import ConcurrencyExtras
 import GithubAPIClient
 import ChecksumClient
-import HTTPStreamClient
 import Testing
 import VaporTesting
 
@@ -62,59 +61,4 @@ struct DownloadSourceArchiveTests {
             }
         }
     }
-
-//    @Test func zipBallURLIsRequestedInHTTPStreamClient() async throws {
-//        // Read the resource file into memory
-//        let url = try #require(Bundle.module.url(forResource: "swift-overture-0.5.0", withExtension: "zip"))
-//        let contents = try Data(contentsOf: url)
-//
-//        let client: GithubAPIClient = .test(
-//            getReleaseByTagName: { input in
-//                #expect(input.owner == "pointfreeco")
-//                #expect(input.repo == "swift-overture")
-//                #expect(input.tag == "0.5.0")
-//                return .mock
-//            }
-//        )
-//        let httpClient = HTTPStreamClient(
-//            execute: { input in
-//                #expect(input.url == GithubAPIClient.Release.mock.zipBallURL)
-//                return .init(status: .ok, headers: HTTPHeaders(), body: .bytes(.init(data: contents)))
-//            }
-//        )
-//        try await testApp(githubAPIClient: client, httpStreamClient: httpClient) { app in
-//            try await app.testing().test(.GET, "pointfreeco/swift-overture/0.5.0.zip", headers: ["Accept": "application/vnd.swift.registry.v1+zip"]) { res in
-//                #expect(res.status == .ok)
-//            }
-//        }
-//    }
-//
-//    @Test func contentTypeIsApplicationZip() async throws {
-//        // Read the resource file into memory
-//        let url = try #require(Bundle.module.url(forResource: "swift-overture-0.5.0", withExtension: "zip"))
-//        let contentsData = try Data(contentsOf: url)
-//        let contentsByteBuffer = ByteBuffer(data: contentsData)
-//
-//        let client: GithubAPIClient = .test(
-//            getReleaseByTagName: { input in
-//                #expect(input.owner == "pointfreeco")
-//                #expect(input.repo == "swift-overture")
-//                #expect(input.tag == "0.5.0")
-//                return .mock
-//            }
-//        )
-//        let httpClient = HTTPStreamClient(
-//            execute: { input in
-//                return .init(status: .ok, headers: HTTPHeaders(), body: .bytes(contentsByteBuffer))
-//            }
-//        )
-//        try await testApp(githubAPIClient: client, httpStreamClient: httpClient) { app in
-//            try await app.testing().test(.GET, "pointfreeco/swift-overture/0.5.0.zip", headers: ["Accept": "application/vnd.swift.registry.v1+zip"]) { res in
-//                #expect(res.status == .ok)
-//                let contentType = try #require(res.headers.contentType)
-//                #expect(contentType.type == "application" && contentType.subType == "zip")
-//                #expect(res.body == contentsByteBuffer)
-//            }
-//        }
-//    }
 }

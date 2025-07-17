@@ -36,7 +36,6 @@ let package = Package(
                 .target(name: "ChecksumClient"),
                 .target(name: "GithubAPIClientImpl"),
                 .target(name: "APIUtilities"),
-                .target(name: "HTTPStreamClient"),
             ]
         ),
         .target(
@@ -105,14 +104,6 @@ let package = Package(
                 .product(name: "DependenciesMacros", package: "swift-dependencies"),
                 .product(name: "Overture", package: "swift-overture"),
                 .product(name: "Vapor", package: "vapor"),
-            ]
-        ),
-       .target(
-            name: "HTTPStreamClient",
-            dependencies: [
-                .product(name: "Dependencies", package: "swift-dependencies"),
-                .product(name: "DependenciesMacros", package: "swift-dependencies"),
-                .product(name: "AsyncHTTPClient", package: "async-http-client"),
             ]
         ),
         .testTarget(

@@ -3,7 +3,6 @@ import Dependencies
 import Fluent
 import FluentSQLiteDriver
 import GithubAPIClient
-import HTTPStreamClient
 import Vapor
 
 public func configure(
@@ -12,7 +11,6 @@ public func configure(
     cacheRootDirectory: String,
     githubAPIClient: GithubAPIClient,
     checksumClient: ChecksumClient,
-    httpStreamClient: HTTPStreamClient,
     logger: Logger,
     githubAPIToken: String,
     sqliteConfiguration: SQLiteConfiguration,
@@ -51,7 +49,6 @@ public func configure(
         githubAPIToken: githubAPIToken,
         githubAPIClient: githubAPIClient,
         checksumClient: checksumClient,
-        httpStreamClient: httpStreamClient,
         appLogger: logger
     )
 

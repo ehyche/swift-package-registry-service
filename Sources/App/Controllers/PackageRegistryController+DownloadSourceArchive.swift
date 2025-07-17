@@ -1,7 +1,6 @@
 import APIUtilities
 import AsyncHTTPClient
 import GithubAPIClient
-import HTTPStreamClient
 import SystemPackage
 import Vapor
 
