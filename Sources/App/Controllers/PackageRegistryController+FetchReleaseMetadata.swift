@@ -1,6 +1,5 @@
 import APIUtilities
 import ChecksumClient
-import PersistenceClient
 import GithubAPIClient
 import Vapor
 

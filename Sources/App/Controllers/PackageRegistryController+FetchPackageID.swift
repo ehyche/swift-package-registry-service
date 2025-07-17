@@ -2,7 +2,6 @@ import APIUtilities
 import ChecksumClient
 import Fluent
 import GithubAPIClient
-import PersistenceClient
 import Vapor
 
 extension PackageRegistryController {

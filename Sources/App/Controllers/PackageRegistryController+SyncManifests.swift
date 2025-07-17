@@ -33,10 +33,10 @@ extension PackageRegistryController {
         // almost always comes after the listPackageReleases call in SPM, then
         // we assume that we already did a tag sync when the listPackageReleases
         // was called. So we don't force a sync now.
-        let tagFile = try await tagsActor.loadTagFile(owner: owner, repo: repo, forceSync: false, logger: req.logger)
+        let tagInfo = try await tagsActor.loadTagInfo(owner: owner, repo: repo, req: req)
 
         // Look up the tag name for the requested semantic version
-        guard let tagName = tagFile.versionToTagName[version] else {
+        guard let tagName = tagInfo.versionToTagName[version] else {
             req.logger.error("Could not find tag with semantic version \"\(version)\" for \"\(owner).\(repo)\".")
             throw Abort(.internalServerError, title: "Could not find tag with semantic version \"\(version)\".")
         }
