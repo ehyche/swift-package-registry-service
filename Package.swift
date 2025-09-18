@@ -13,10 +13,8 @@ let package = Package(
         .package(url: "https://github.com/swift-server/swift-openapi-async-http-client.git", from: "1.1.0"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.8.1"),
         .package(url: "https://github.com/apple/swift-http-types", from: "1.3.1"),
-        .package(url: "https://github.com/swift-server/async-http-client", from: "1.25.2"),
         .package(url: "https://github.com/pointfreeco/swift-overture.git", from: "0.5.0"),
         .package(url: "https://github.com/pointfreeco/swift-concurrency-extras.git", from: "1.3.1"),
-        .package(url: "https://github.com/apple/swift-nio.git", from: "2.81.0"),
         .package(url: "https://github.com/groue/Semaphore.git", from: "0.1.0"),
         .package(url: "https://github.com/vapor/fluent.git", from: "4.12.0"),
         .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.8.0"),
@@ -36,7 +34,6 @@ let package = Package(
                 .target(name: "ChecksumClient"),
                 .target(name: "GithubAPIClientImpl"),
                 .target(name: "APIUtilities"),
-                .target(name: "HTTPStreamClient"),
             ]
         ),
         .target(
@@ -105,14 +102,6 @@ let package = Package(
                 .product(name: "DependenciesMacros", package: "swift-dependencies"),
                 .product(name: "Overture", package: "swift-overture"),
                 .product(name: "Vapor", package: "vapor"),
-            ]
-        ),
-       .target(
-            name: "HTTPStreamClient",
-            dependencies: [
-                .product(name: "Dependencies", package: "swift-dependencies"),
-                .product(name: "DependenciesMacros", package: "swift-dependencies"),
-                .product(name: "AsyncHTTPClient", package: "async-http-client"),
             ]
         ),
         .testTarget(

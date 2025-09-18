@@ -2,7 +2,6 @@
 import ConcurrencyExtras
 import GithubAPIClient
 import ChecksumClient
-import HTTPStreamClient
 import Testing
 import VaporTesting
 

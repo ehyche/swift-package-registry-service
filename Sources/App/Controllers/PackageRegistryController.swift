@@ -4,7 +4,6 @@ import ChecksumClient
 import Fluent
 import Foundation
 import GithubAPIClient
-import HTTPStreamClient
 import Vapor
 
 struct PackageRegistryController: RouteCollection {
@@ -16,7 +15,6 @@ struct PackageRegistryController: RouteCollection {
     let githubAPIToken: String
     let githubAPIClient: GithubAPIClient
     let checksumClient: ChecksumClient
-    let httpStreamClient: HTTPStreamClient
     let appLogger: Logger
     let getDateNow: GetDateNow
     let tagsActor: TagsActor
@@ -32,7 +30,6 @@ struct PackageRegistryController: RouteCollection {
         githubAPIToken: String,
         githubAPIClient: GithubAPIClient,
         checksumClient: ChecksumClient,
-        httpStreamClient: HTTPStreamClient,
         appLogger: Logger,
         getDateNow: @escaping GetDateNow = { Date.now }
     ) {
@@ -42,7 +39,6 @@ struct PackageRegistryController: RouteCollection {
         self.githubAPIToken = githubAPIToken
         self.githubAPIClient = githubAPIClient
         self.checksumClient = checksumClient
-        self.httpStreamClient = httpStreamClient
         self.appLogger = appLogger
         self.getDateNow = getDateNow
 

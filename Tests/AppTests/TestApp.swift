@@ -2,14 +2,12 @@
 import Dependencies
 import GithubAPIClient
 import ChecksumClient
-import HTTPStreamClient
 import Vapor
 import VaporTesting
 
 func testApp(
     githubAPIClient: GithubAPIClient = .mock,
     checksumClient: ChecksumClient = .mock,
-    httpStreamClient: HTTPStreamClient = .mock,
     githubAPIToken: String = "",
     clientSupportsPagination: Bool = false,
     testAction: (Application) async throws -> ()
@@ -22,7 +20,6 @@ func testApp(
             cacheRootDirectory: "",
             githubAPIClient: githubAPIClient,
             checksumClient: checksumClient,
-            httpStreamClient: httpStreamClient,
             logger: app.logger,
             githubAPIToken: githubAPIToken,
             sqliteConfiguration: .memory,
